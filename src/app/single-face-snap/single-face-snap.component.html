@@ -1,7 +1,12 @@
 <div
   class="face-snap-card"
+  *ngIf="singleFaceSnap$ | async as faceSnap"
+  [ngClass]="{ snapped: buttonText === 'Oops, unSnap!' }"
 >
-  <h2>{{ singleFaceSnap.title | uppercase }}</h2>
-  <p>{{ singleFaceSnap.description }}</p>
-  <button (click)="onViewFaceSnap()">VIEW</button>
+  <h2>{{ faceSnap.title | uppercase }}</h2>
+  <p>{{ faceSnap.description }}</p>
+  <p>snaps: {{ faceSnap.snaps }}</p>
+  <button (click)="onSnap(faceSnap.id)">{{ buttonText }}</button>
 </div>
+
+<button (click)="onViewFaceSnap()">VIEW</button>

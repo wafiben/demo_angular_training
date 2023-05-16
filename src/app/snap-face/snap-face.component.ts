@@ -11,8 +11,6 @@ import {Router} from '@angular/router';
 export class SnapFaceComponent implements OnInit {
   @Input() faceSnap!: FaceSnap
   click: boolean=false;
-
-
   buttonText!: string;
   ngOnInit(): void {
     this.buttonText="oh snap";

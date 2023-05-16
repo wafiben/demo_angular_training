@@ -1,11 +1,15 @@
 import {Injectable} from '@angular/core';
 import {FaceSnap} from '../models/face-snap.model';
-
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FaceSnapService {
+  constructor(private http: HttpClient) {
+
+  }
   faceSnaps: FaceSnap[]=[
     {
       id: 0,
@@ -37,36 +41,34 @@ export class FaceSnapService {
         'https://media.composition.gallery/artworkpic/takashi-murakami-dob-in-pure-white-robe-pink-and-blue-lithograph-available-for-sale-on-composition-gallery1682341205-56562.jpeg',
     },
   ];
-  getALLFaceSnaps(): FaceSnap[] {
-    return this.faceSnaps
+  getALLFaceSnaps(): Observable<FaceSnap[]> {
+    return this.http.get<FaceSnap[]>("http://localhost:3000/facesnaps")
   }
   snapFacSnapById(id: number,op: '+'|'-'): void {
-    const snap=this.faceSnaps.find((elt) => elt.id===id);
-    if(snap) {
-      if(op=="+") {
-        snap.snaps++
-      } else {
-        snap.snaps--
-      }
+    console.log(id)
+    /* const snap=this.faceSnaps.find((elt) => elt.id===id);
+     if(snap) {
+       if(op=="+") {
+         snap.snaps++
+       } else {
+         snap.snaps--
+       }
 
-    } else {
-      throw Error('snap do not exist')
-    }
+     } else {
+       throw Error('snap do not exist')
+     }*/
   }
-  getOnSingleSnap(id: number): FaceSnap {
-    const foundElement=this.faceSnaps.find((elt) => elt.id===id);
-    if(foundElement) {
-      return foundElement
-    }
-    else{
-      return {id: 0,title: '',
-      description: '',
+  getOnSingleSnap(id: number): Observable<FaceSnap> {
+    return this.http.get<FaceSnap>(`http://localhost:3000/facesnaps/${id}`)
+  }
+  addFaceSnap(formValue: {title: string,description: string,location?: string,imageUrl: string}): void {
+    const faceSnap: FaceSnap={
+      ...formValue,
       createdDate: new Date(),
       snaps: 0,
-      imageUrl:"",
-      location: '',
-    }
+      id: this.faceSnaps[this.faceSnaps.length-1].id+1
     }
 
+    this.faceSnaps.push(faceSnap)
   }
 }
